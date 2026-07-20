@@ -7,7 +7,7 @@ const playerSpeed = 300;
 
 export default class LocalPlayer extends Phaser.GameObjects.Rectangle // -> Phaser.GameObjects.Sprite
 {
-    constructor(scene, x, y)
+    constructor(scene, x, y, network)
     {
         super(scene, x, y, playerWidth, playerHeight, playerColor);
 
@@ -17,6 +17,8 @@ export default class LocalPlayer extends Phaser.GameObjects.Rectangle // -> Phas
         this.body.setCollideWorldBounds(true);
         this.body.setSize(playerWidth, playerHeight);
 
+        this.network = network;
+
         this.wKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
         this.aKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
         this.sKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
@@ -25,28 +27,41 @@ export default class LocalPlayer extends Phaser.GameObjects.Rectangle // -> Phas
         this.speed = playerSpeed;
     }
 
-    // TODO: send input to server
     update()
     {
+        const input =
+        {
+            left: this.aKey.isDown,
+            right: this.dKey.isDown,
+            up: this.wKey.isDown,
+            down: this.sKey.isDown
+        };
+
         var vx = 0, vy = 0;
 
-        if (this.wKey.isDown) 
+        if (input.up) 
         {
             vy = -this.speed;
         }
-        if (this.aKey.isDown) 
+        if (input.left) 
         {
             vx = -this.speed;
         }
-        if (this.sKey.isDown) 
+        if (input.down) 
         {
             vy = this.speed;
         }
-        if (this.dKey.isDown) 
+        if (input.right) 
         {
             vx = this.speed;
         }
 
         this.body.setVelocity(vx, vy);
+
+
+        this.network.send(JSON.stringify({
+            type: "PLAYER_MOVE",
+            input: input
+        }));
     }
 }

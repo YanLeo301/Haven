@@ -2,8 +2,8 @@ import Phaser from 'phaser';
 import MainScene from './scenes/MainScene';
 import WebSocketClient from './network/WebSocketClient';
 
-var wsc = new WebSocketClient();
-wsc.connect('http://localhost:8080/');
+var webSocketClient = new WebSocketClient();
+webSocketClient.connect('http://localhost:8080/');
 
 var config =
 {
@@ -14,7 +14,7 @@ var config =
     {
         default: 'arcade'
     },
-    scene: MainScene
+    scene: new MainScene(webSocketClient)
 };
 
 var game = new Phaser.Game(config);

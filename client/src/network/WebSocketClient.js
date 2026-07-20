@@ -28,4 +28,12 @@ export default class WebSocketClient
             console.log('Disconnected from server');
         }
     }
+
+    send(data)
+    {
+        if (this.ws.OPEN)
+        {
+            this.ws.send(data);
+        }
+    }
 }
