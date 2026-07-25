@@ -1,11 +1,22 @@
 package com.browsergame.server.websocket;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.browsergame.server.game.SessionManager;
+
+@Component
 public class GameWebSocketHandler extends TextWebSocketHandler
 {
+    private final SessionManager sessionManager;
+
+    public GameWebSocketHandler(SessionManager sessionManager)
+    {
+        this.sessionManager = sessionManager;
+    }
+
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception
     {
@@ -21,3 +32,5 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         System.out.println("Connected: " + session.getId());
     }
 }
+
+//TODO: update sessionManager on connect and process Messages from client
