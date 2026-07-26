@@ -19,4 +19,10 @@ public class SessionManager
     {
         return sessionMap.get(sessionId);
     }
+
+    public void add(String sessionId, Player player)
+    {
+        sessionMap.put(sessionId, player);
+    }
+
 }
