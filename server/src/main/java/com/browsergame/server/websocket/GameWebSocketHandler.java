@@ -30,8 +30,8 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(payload);
 
-        float x = jsonNode.get("x").asFloat();
-        float y = jsonNode.get("y").asFloat();
+        int x = jsonNode.get("x").asInt();
+        int y = jsonNode.get("y").asInt();
 
         if (sessionManager.getPlayer(session.getId()) != null)
         {

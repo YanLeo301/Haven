@@ -58,11 +58,13 @@ export default class LocalPlayer extends Phaser.GameObjects.Rectangle // -> Phas
 
         this.body.setVelocity(vx, vy);
 
-        //TODO: fix this
-        // this.network.send(JSON.stringify({
-        //     type: "PLAYER_POS",
-        //     x: "this.body.position.x",
-        //     y: "this.body.position.y"
-        // })); 
+        if (vx != 0 || vy != 0)
+        {
+            this.network.send(JSON.stringify({
+                type: "PLAYER_POS",
+                x: this.body.position.x,
+                y: this.body.position.y
+            })); 
+        }
     }
 }

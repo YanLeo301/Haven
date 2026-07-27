@@ -31,7 +31,7 @@ export default class WebSocketClient
 
     send(data)
     {
-        if (this.ws.OPEN)
+        if (this.ws.readyState === WebSocket.OPEN)
         {
             this.ws.send(data);
         }
