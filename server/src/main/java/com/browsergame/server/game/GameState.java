@@ -6,23 +6,22 @@ import java.util.concurrent.ConcurrentMap;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SessionManager
+public class GameState
 {
-    private final ConcurrentMap<String, Player> sessionMap;
+    private final ConcurrentMap<String, Player> playerMap;
 
-    public SessionManager()
+    public GameState()
     {
-        sessionMap = new ConcurrentHashMap<>();
+        playerMap = new ConcurrentHashMap<>();
     }
 
     public Player getPlayer(String sessionId)
     {
-        return sessionMap.get(sessionId);
+        return playerMap.get(sessionId);
     }
 
     public void add(String sessionId, Player player)
     {
-        sessionMap.put(sessionId, player);
+        playerMap.put(sessionId, player);
     }
-
 }

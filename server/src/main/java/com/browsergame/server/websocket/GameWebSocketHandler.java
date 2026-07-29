@@ -1,12 +1,13 @@
 package com.browsergame.server.websocket;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.browsergame.server.game.GameState;
 import com.browsergame.server.game.Player;
-import com.browsergame.server.game.SessionManager;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
@@ -14,11 +15,13 @@ import tools.jackson.databind.ObjectMapper;
 @Component
 public class GameWebSocketHandler extends TextWebSocketHandler
 {
-    private final SessionManager sessionManager;
+    private final SessionStore sessionStore;
+    private final GameState gameState;
 
-    public GameWebSocketHandler(SessionManager sessionManager)
+    public GameWebSocketHandler(SessionStore sessionStore, GameState gameState)
     {
-        this.sessionManager = sessionManager;
+        this.sessionStore = sessionStore;
+        this.gameState = gameState;
     }
 
     @Override
@@ -33,9 +36,9 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         int x = jsonNode.get("x").asInt();
         int y = jsonNode.get("y").asInt();
 
-        if (sessionManager.getPlayer(session.getId()) != null)
+        if (gameState.getPlayer(session.getId()) != null)
         {
-            Player player = sessionManager.getPlayer(session.getId());
+            Player player = gameState.getPlayer(session.getId());
             player.setPos(x, y);
         }
 
@@ -46,6 +49,16 @@ public class GameWebSocketHandler extends TextWebSocketHandler
     public void afterConnectionEstablished(WebSocketSession session)
     {
         System.out.println("Connected: " + session.getId());
-        sessionManager.add(session.getId(), new Player(session.getId()));
+        sessionStore.add(session.getId(), session);
+        gameState.add(session.getId(), new Player(session.getId()));
     }
+    //TODO: delete sessionStore and gameState entry on disconnect
+
+    @Scheduled(fixedRate=50)
+    public void broadcast()
+    {
+        //TODO: need to iterate over the the session map
+    }
+
+    //TODO: Seperate game logic from network logic, how?
 }
