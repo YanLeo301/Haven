@@ -1,11 +1,10 @@
-
+//TODO: receive remote player data and pass it to scene to render
 export default class WebSocketClient
 {
     constructor()
     {
         this.ws = null;
         this.messageHandler = null;
-        this.isConnected = false;
         this.pendingMessages = [];
     }
     
@@ -21,6 +20,11 @@ export default class WebSocketClient
         this.ws.onerror = (error) =>
         {
             console.log('WebSocket error:', error);
+        }
+
+        this.ws.onmessage = (message) =>
+        {
+            console.log('Received: ' + message);
         }
 
         this.ws.onclose = () =>

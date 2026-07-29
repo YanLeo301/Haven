@@ -1,5 +1,7 @@
 package com.browsergame.server.websocket;
 
+import java.util.concurrent.ConcurrentMap;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
@@ -41,8 +43,6 @@ public class GameWebSocketHandler extends TextWebSocketHandler
             Player player = gameState.getPlayer(session.getId());
             player.setPos(x, y);
         }
-
-        session.sendMessage(new TextMessage("Server received: " + payload + " at " + System.currentTimeMillis()));
     }
 
     @Override
@@ -54,11 +54,28 @@ public class GameWebSocketHandler extends TextWebSocketHandler
     }
     //TODO: delete sessionStore and gameState entry on disconnect
 
-    @Scheduled(fixedRate=50)
-    public void broadcast()
+    //TODO: send Player objects as json 
+    @Scheduled(fixedRate = 500)
+    public void broadcast() throws Exception
     {
-        //TODO: need to iterate over the the session map
+        ConcurrentMap<String, WebSocketSession> sessionMap = sessionStore.getSessionMap();
+
+        sessionMap.forEach((sessionId, session) -> 
+        {
+            try 
+            {
+                if (session.isOpen())
+                {
+                    session.sendMessage(new TextMessage("Broadcast"));
+                }
+            } 
+            catch (Exception e) 
+            {
+                System.out.println("Failed to send message to session: " + sessionId);
+                System.out.println(e.toString());
+            }
+        });
     }
 
-    //TODO: Seperate game logic from network logic, how?
+    //TODO: Seperate game logic from network logic maybe if needed
 }

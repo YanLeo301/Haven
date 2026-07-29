@@ -21,9 +21,14 @@ public class SessionStore
         return sessionMap.get(sessionId);
     }
 
+    public ConcurrentMap<String, WebSocketSession> getSessionMap()
+    {
+        return sessionMap;
+    }
+
     public void add(String sessionId, WebSocketSession session)
     {
         sessionMap.put(sessionId, session);
+        System.out.println("Session added: " + sessionId);
     }
-
 }

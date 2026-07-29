@@ -23,5 +23,6 @@ public class GameState
     public void add(String sessionId, Player player)
     {
         playerMap.put(sessionId, player);
+        System.out.println("Player added: " + sessionId);
     }
 }
