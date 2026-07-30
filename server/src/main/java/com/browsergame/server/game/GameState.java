@@ -25,4 +25,9 @@ public class GameState
         playerMap.put(sessionId, player);
         System.out.println("Player added: " + sessionId);
     }
+
+    public ConcurrentMap<String, Player> getPlayerMap()
+    {
+        return playerMap;
+    }
 }
