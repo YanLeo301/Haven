@@ -18,6 +18,12 @@ export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Pha
         this.network = network;
     }
 
+    setId(id)
+    {
+        this.id = id;
+        console.log("Remote player id set to: ", id);
+    }
+
     update()
     {
         //TODO: update positon with data from server

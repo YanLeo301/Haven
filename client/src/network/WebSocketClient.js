@@ -1,4 +1,3 @@
-//TODO: receive remote player data and pass it to scene to render
 export default class WebSocketClient
 {
     constructor()

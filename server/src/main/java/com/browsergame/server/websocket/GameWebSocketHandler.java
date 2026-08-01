@@ -55,9 +55,12 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         gameState.add(session.getId(), new Player(session.getId()));
 
         //TODO: this id must be set as the id of local player by client
+        ConnectionMessage connectionMessage = new ConnectionMessage(session.getId());
+        String jsonConnectionMessage = objectMapper.writeValueAsString(connectionMessage);
+
         try
         {
-            session.sendMessage(new TextMessage(session.getId()));
+            session.sendMessage(new TextMessage(jsonConnectionMessage));
         }
         catch (IOException | IllegalStateException e)
         {

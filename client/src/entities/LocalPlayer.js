@@ -21,6 +21,12 @@ export default class LocalPlayer extends Phaser.GameObjects.Rectangle // -> Phas
         this.speed = playerSpeed;
     }
 
+    setId(id)
+    {
+        this.id = id;
+        console.log("Local player id set to: ", id);
+    }
+
     update()
     {
         var vx = 0, vy = 0;
