@@ -7,6 +7,7 @@ export default class MainScene extends Phaser.Scene
     {
         super('MainScene');
         this.localPlayer = null;
+        this.remotePlayers = [];
         this.network = network;
     }
     

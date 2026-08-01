@@ -15,43 +15,29 @@ export default class LocalPlayer extends Phaser.GameObjects.Rectangle // -> Phas
 
         scene.physics.world.enable(this);
         this.body.setCollideWorldBounds(true);
-        this.body.setSize(playerWidth, playerHeight);
 
         this.network = network;
-
-        this.wKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W);
-        this.aKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A);
-        this.sKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S);
-        this.dKey = scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
 
         this.speed = playerSpeed;
     }
 
     update()
     {
-        const input =
-        {
-            left: this.aKey.isDown,
-            right: this.dKey.isDown,
-            up: this.wKey.isDown,
-            down: this.sKey.isDown
-        };
-
         var vx = 0, vy = 0;
 
-        if (input.up) 
+        if (this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.W).isDown) 
         {
             vy = -this.speed;
         }
-        if (input.left) 
+        if (this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.A).isDown) 
         {
             vx = -this.speed;
         }
-        if (input.down) 
+        if (this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.S).isDown) 
         {
             vy = this.speed;
         }
-        if (input.right) 
+        if (this.scene.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D).isDown) 
         {
             vx = this.speed;
         }

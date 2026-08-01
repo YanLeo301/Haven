@@ -22,7 +22,7 @@ export default class WebSocketClient
             console.log('WebSocket error:', error);
         }
 
-        //TODO: process the game state data
+        //TODO: process the game state, id data
         this.ws.onmessage = (message) =>
         {
             console.log('Received: ' + message.data);

@@ -53,6 +53,17 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         System.out.println("Connected: " + session.getId());
         sessionStore.add(session.getId(), session);
         gameState.add(session.getId(), new Player(session.getId()));
+
+        //TODO: this id must be set as the id of local player by client
+        try
+        {
+            session.sendMessage(new TextMessage(session.getId()));
+        }
+        catch (IOException | IllegalStateException e)
+        {
+            System.out.println("Failed to send id to session: " + session.getId());
+            System.out.println(e.toString());            
+        }
     }
     //TODO: delete sessionStore and gameState entry on disconnect
 
