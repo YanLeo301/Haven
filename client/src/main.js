@@ -14,7 +14,7 @@ var config =
     {
         default: 'arcade'
     },
-    scene: new MainScene(webSocketClient)
+    scene: new MainScene(webSocketClient, webSocketClient.messageHandler)
 };
 
 var game = new Phaser.Game(config);

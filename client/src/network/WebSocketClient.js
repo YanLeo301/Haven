@@ -1,9 +1,11 @@
+import MessageHandler from "./MessageHandler";
+
 export default class WebSocketClient
 {
     constructor()
     {
         this.ws = null;
-        this.messageHandler = null;
+        this.messageHandler = new MessageHandler();
         this.pendingMessages = [];
     }
     
@@ -24,6 +26,7 @@ export default class WebSocketClient
         //TODO: process the game state, id data
         this.ws.onmessage = (message) =>
         {
+            this.messageHandler.handle(message.data);
             console.log('Received: ' + message.data);
         }
 
