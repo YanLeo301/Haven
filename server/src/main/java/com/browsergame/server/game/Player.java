@@ -1,8 +1,12 @@
 package com.browsergame.server.game;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 public class Player
 {
+    @JsonIgnore
     private final String id;
+    
     private int x;
     private int y;
 

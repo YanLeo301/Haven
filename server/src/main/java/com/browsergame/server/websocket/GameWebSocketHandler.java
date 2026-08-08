@@ -1,7 +1,9 @@
 package com.browsergame.server.websocket;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentMap;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -68,30 +70,31 @@ public class GameWebSocketHandler extends TextWebSocketHandler
     }
     //TODO: delete sessionStore and gameState entry on disconnect
 
-    // @Scheduled(fixedRate = 1000)
-    // public void broadcast() throws Exception
-    // {
-    //     ConcurrentMap<String, WebSocketSession> sessionMap = sessionStore.getSessionMap();
-    //     ConcurrentMap<String, Player> playerMap = gameState.getPlayerMap();
+    @Scheduled(fixedRate = 1000)
+    public void broadcast() throws Exception
+    {
+        ConcurrentMap<String, WebSocketSession> sessionMap = sessionStore.getSessionMap();
+        ConcurrentMap<String, Player> playerMap = gameState.getPlayerMap();
 
-    //     String gameStateAsString = objectMapper.writeValueAsString(playerMap);
+        GameStateMessage gameStateMessage = new GameStateMessage("gameState", playerMap);
+        String gameStateMessageString = objectMapper.writeValueAsString(gameStateMessage);
 
-    //     sessionMap.forEach((sessionId, session) -> 
-    //     {
-    //         try 
-    //         {
-    //             if (session.isOpen())
-    //             {
-    //                 session.sendMessage(new TextMessage(gameStateAsString));
-    //             }
-    //         } 
-    //         catch (IOException | IllegalStateException e) 
-    //         {
-    //             System.out.println("Failed to send game state to session: " + sessionId);
-    //             System.out.println(e.toString());
-    //         }
-    //     });
-    // }
+        sessionMap.forEach((sessionId, session) -> 
+        {
+            try 
+            {
+                if (session.isOpen())
+                {
+                    session.sendMessage(new TextMessage(gameStateMessageString));
+                }
+            } 
+            catch (IOException | IllegalStateException e) 
+            {
+                System.out.println("Failed to send game state to session: " + sessionId);
+                System.out.println(e.toString());
+            }
+        });
+    }
 
     //TODO: Maybe seperate network logic from game logic
 }
