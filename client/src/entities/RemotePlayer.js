@@ -6,7 +6,7 @@ const remotePlayerColor = 0xff0000;
 
 export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Phaser.GameObjects.Sprite
 {
-    constructor(scene, x, y, network)
+    constructor(scene, x, y, id, messageHandler)
     {
         super(scene, x, y, remotePlayerWidth, remotePlayerHeight, remotePlayerColor);
 
@@ -15,17 +15,29 @@ export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Pha
         scene.physics.world.enable(this);
         this.body.setCollideWorldBounds(true);
 
-        this.network = network;
-    }
-
-    setId(id)
-    {
         this.id = id;
-        console.log("Remote player id set to: ", id);
+        this.messageHandler = messageHandler;
+
+        this.messageHandler.addEventListener(
+            "gameState",
+            (event) =>
+            {
+                const map = event.detail.gameStateMap;
+
+                for (const [key, value] of Object.entries(map))
+                {
+                    if (key === this.id)
+                    {
+                        this.x = value.x;
+                        this.y = value.y;
+                    }
+                }
+            }
+        )
     }
 
     update()
     {
-        //TODO: update positon with data from server
+        this.setPosition(this.x, this.y);
     }
 }

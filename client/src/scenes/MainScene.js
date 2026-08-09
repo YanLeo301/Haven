@@ -1,14 +1,15 @@
 import Phaser from 'phaser'
 import LocalPlayer from '../entities/LocalPlayer'
 import MessageHandler from '../network/MessageHandler';
+import RemotePlayer from '../entities/RemotePlayer';
 
 export default class MainScene extends Phaser.Scene
 {
     constructor(network, messageHandler)
     {
         super('MainScene');
-        this.localPlayer = null;
-        this.remotePlayers = [];
+        this.localPlayer = null; // stores LocalPlayer object
+        this.remotePlayers = new Map(); // maps remote players ids to objects
         this.network = network;
         this.messageHandler = messageHandler;
     }
@@ -25,6 +26,26 @@ export default class MainScene extends Phaser.Scene
                 this.localPlayer.setId(event.detail.id);
             }
         );
+        
+        this.messageHandler.addEventListener(
+            "gameState",
+            (event) =>
+            {
+                const map = event.detail.gameStateMap;
+
+                //TODO: get rid of players that disconnected
+                for (const [key, value] of Object.entries(map))
+                {
+                    if (key === this.localPlayer.id) continue;
+
+                    if (!this.remotePlayers.has(key))
+                    {
+                        const newRemotePlayer = new RemotePlayer(this, value.x, value.y, key, this.messageHandler);
+                        this.remotePlayers.set(key, newRemotePlayer);
+                    }
+                }
+            }
+        )
     }
 
     update()
@@ -32,6 +53,12 @@ export default class MainScene extends Phaser.Scene
         if (this.localPlayer)
         {
             this.localPlayer.update();
+        }
+
+        for (const id of this.remotePlayers.keys())
+        {
+            const remotePlayer = this.remotePlayers.get(id);
+            remotePlayer.update();
         }
     }
 }
