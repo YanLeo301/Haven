@@ -70,7 +70,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler
     }
     //TODO: delete sessionStore and gameState entry on disconnect
 
-    @Scheduled(fixedRate = 1000)
+    @Scheduled(fixedRate = 16)
     public void broadcast() throws Exception
     {
         ConcurrentMap<String, WebSocketSession> sessionMap = sessionStore.getSessionMap();
