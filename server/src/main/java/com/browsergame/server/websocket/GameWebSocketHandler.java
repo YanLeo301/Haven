@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentMap;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -54,7 +55,6 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         sessionStore.add(session.getId(), session);
         gameState.add(session.getId(), new Player(session.getId()));
 
-        //TODO: this id must be set as the id of local player by client
         ConnectionMessage connectionMessage = new ConnectionMessage("connection", session.getId());
         String jsonConnectionMessage = objectMapper.writeValueAsString(connectionMessage);
 
@@ -68,7 +68,6 @@ public class GameWebSocketHandler extends TextWebSocketHandler
             System.out.println(e.toString());            
         }
     }
-    //TODO: delete sessionStore and gameState entry on disconnect
 
     @Scheduled(fixedRate = 16)
     public void broadcast() throws Exception
@@ -94,6 +93,13 @@ public class GameWebSocketHandler extends TextWebSocketHandler
                 System.out.println(e.toString());
             }
         });
+    }
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status)
+    {
+        gameState.remove(session.getId());
+        sessionStore.remove(session.getId());
     }
 
     //TODO: Maybe seperate network logic from game logic

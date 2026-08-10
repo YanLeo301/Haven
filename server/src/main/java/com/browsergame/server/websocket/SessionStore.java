@@ -31,4 +31,9 @@ public class SessionStore
         sessionMap.put(sessionId, session);
         System.out.println("Session added: " + sessionId);
     }
+
+    public void remove(String sessionId)
+    {
+        sessionMap.remove(sessionId);
+    }
 }
