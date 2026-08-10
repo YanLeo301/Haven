@@ -32,8 +32,16 @@ export default class MainScene extends Phaser.Scene
             (event) =>
             {
                 const map = event.detail.gameStateMap;
+                
+                for (const id of this.remotePlayers.keys())
+                {
+                    if (!Object.hasOwn(map, id))
+                    {
+                        this.remotePlayers.delete(id);
+                        console.log("RemotePlayer removed");
+                    }
+                }
 
-                //TODO: get rid of players that disconnected
                 for (const [key, value] of Object.entries(map))
                 {
                     if (key === this.localPlayer.id) continue;
