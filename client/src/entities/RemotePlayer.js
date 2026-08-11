@@ -28,18 +28,11 @@ export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Pha
                 {
                     if (key === this.id)
                     {
-                        //this already changes the position what makes update redundant
                         this.x = value.x;
                         this.y = value.y;
                     }
                 }
             }
         )
-    }
-
-    //TODO: this is not executed
-    update()
-    {
-        this.setPosition(this.x, this.y);
     }
 }

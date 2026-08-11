@@ -62,11 +62,5 @@ export default class MainScene extends Phaser.Scene
         {
             this.localPlayer.update();
         }
-
-        for (const id of this.remotePlayers.keys())
-        {
-            const remotePlayer = this.remotePlayers.get(id);
-            remotePlayer.update();
-        }
     }
 }
