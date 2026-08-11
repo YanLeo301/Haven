@@ -19,6 +19,13 @@ export default class LocalPlayer extends Phaser.GameObjects.Rectangle // -> Phas
         this.network = network;
 
         this.speed = playerSpeed;
+
+        //TODO: figure out why this is not working
+        // this.network.send(JSON.stringify({
+        //     type: "PLAYER_POS",
+        //     x: this.body.position.x,
+        //     y: this.body.position.y
+        // }));
     }
 
     setId(id)
@@ -50,13 +57,11 @@ export default class LocalPlayer extends Phaser.GameObjects.Rectangle // -> Phas
 
         this.body.setVelocity(vx, vy);
 
-        if (vx != 0 || vy != 0)
-        {
-            this.network.send(JSON.stringify({
-                type: "PLAYER_POS",
-                x: this.body.position.x,
-                y: this.body.position.y
-            })); 
-        }
+        //TODO: only send when position changes, but send spawn position
+        this.network.send(JSON.stringify({
+            type: "PLAYER_POS",
+            x: this.body.position.x,
+            y: this.body.position.y
+        })); 
     }
 }
