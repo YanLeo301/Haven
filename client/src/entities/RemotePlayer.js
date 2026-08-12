@@ -35,4 +35,9 @@ export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Pha
             }
         )
     }
+
+    remove()
+    {
+        this.destroy();
+    }
 }

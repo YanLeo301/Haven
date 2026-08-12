@@ -37,6 +37,8 @@ export default class MainScene extends Phaser.Scene
                 {
                     if (!Object.hasOwn(map, id))
                     {
+                        const goneRemotePlayer = this.remotePlayers.get(id);
+                        goneRemotePlayer.remove();
                         this.remotePlayers.delete(id);
                         console.log("RemotePlayer removed");
                     }
