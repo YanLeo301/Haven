@@ -5,14 +5,14 @@ import WebSocketClient from './network/WebSocketClient';
 var webSocketClient = new WebSocketClient();
 webSocketClient.connect('http://localhost:8080/');
 
-const width = 1000;
-const height = 600;
+const WIDTH = 3000;
+const HEIGHT = 2000;
 
 var config =
 {
     type: Phaser.AUTO,
-    width: width,
-    height: height,
+    width: WIDTH,
+    height: HEIGHT,
     physics:
     {
         default: 'matter',
@@ -27,8 +27,8 @@ var config =
             {
                 x: 0,
                 y: 0,
-                width: width,
-                height: height,
+                width: WIDTH,
+                height: HEIGHT,
                 thickness: 64,
                 left: true,
                 right: true,
