@@ -4,6 +4,7 @@ const remotePlayerWidth = 20;
 const remotePlayerHeight = 20;
 const remotePlayerColor = 0xff0000;
 
+//TODO: change analog to LocalPlayer
 export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Phaser.GameObjects.Sprite
 {
     constructor(scene, x, y, id, messageHandler)
@@ -19,10 +20,10 @@ export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Pha
         this.messageHandler = messageHandler;
 
         this.messageHandler.addEventListener(
-            "gameState",
+            "playerPos",
             (event) =>
             {
-                const map = event.detail.gameStateMap;
+                const map = event.detail.playerMap;
 
                 for (const [key, value] of Object.entries(map))
                 {
