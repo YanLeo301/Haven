@@ -16,7 +16,7 @@ export default class MainScene extends Phaser.Scene
     
     create()
     {
-        this.cameras.main.setBackgroundColor('#1a1a2e');
+        this.cameras.main.setBackgroundColor('#202020');
         this.localPlayer = new LocalPlayer(this, 400, 300, this.network);
 
         this.messageHandler.addEventListener(
@@ -28,10 +28,10 @@ export default class MainScene extends Phaser.Scene
         );
         
         this.messageHandler.addEventListener(
-            "gameState",
+            "playerPos",
             (event) =>
             {
-                const map = event.detail.gameStateMap;
+                const map = event.detail.playerMap;
                 
                 for (const id of this.remotePlayers.keys())
                 {
@@ -56,6 +56,8 @@ export default class MainScene extends Phaser.Scene
                 }
             }
         )
+
+        //TODO: receive nodePosMessage and create nodes
     }
 
     update()
