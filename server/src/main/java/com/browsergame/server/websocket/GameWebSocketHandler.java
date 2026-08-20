@@ -69,14 +69,14 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         }
     }
 
-    @Scheduled(fixedRate = 16)
+    @Scheduled(fixedRate = 50)
     public void broadcast() throws Exception
     {
         ConcurrentMap<String, WebSocketSession> sessionMap = sessionStore.getSessionMap();
         ConcurrentMap<String, Player> playerMap = gameState.getPlayerMap();
 
-        GameStateMessage gameStateMessage = new GameStateMessage("gameState", playerMap);
-        String gameStateMessageString = objectMapper.writeValueAsString(gameStateMessage);
+        PlayerPosMessage playerPosMessage = new PlayerPosMessage("playerPos", playerMap);
+        String playerPosMessageString = objectMapper.writeValueAsString(playerPosMessage);
 
         sessionMap.forEach((sessionId, session) -> 
         {
@@ -84,7 +84,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler
             {
                 if (session.isOpen())
                 {
-                    session.sendMessage(new TextMessage(gameStateMessageString));
+                    session.sendMessage(new TextMessage(playerPosMessageString));
                 }
             } 
             catch (IOException | IllegalStateException e) 
