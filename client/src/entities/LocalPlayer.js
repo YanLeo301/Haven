@@ -1,8 +1,8 @@
 import Phaser from 'phaser'
 
 //TODO: find the best feeling values
-const playerRadius = 20;
-const playerColor = 0xffffff;
+const playerRadius = 50;
+const playerColor = 0x8FBC8B;
 const playerSpeed = 5;
 
 const droneRadius = 5;
@@ -16,7 +16,7 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
 {
     constructor(scene, x, y, network)
     {
-        super(scene, x, y, playerRadius, 0, 360, false, 0x000000, 1);
+        super(scene, x, y, playerRadius, 0, 360, false, 0x000000, 0);
 
         scene.add.existing(this);
         scene.matter.add.gameObject(this);
