@@ -6,11 +6,15 @@ const playerColor = 0x8FBC8B;
 const playerSpeed = 5;
 
 const droneRadius = 5;
-const droneSeparationDistance = 5;
+const droneSeparationDistance = 3;
 const attractionStrength = 0.000002;
 
-const PLAYER_CATEGORY = 0x0001;
-const DRONE_CATEGORY = 0x0002;
+//TODO: find clean way to make these shared for all entities
+//bitmasks
+const WORLD_CATEGORY = 0x0001;
+const PLAYER_CATEGORY = 0x0002;
+const DRONE_CATEGORY = 0x0004;
+const NODE_CATEGORY = 0x0008;
 
 export default class LocalPlayer extends Phaser.GameObjects.Arc
 {
@@ -23,7 +27,7 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
 
         this.body.circleRadius = playerRadius;
         this.body.collisionFilter.category = PLAYER_CATEGORY;
-        this.body.collisionFilter.mask = PLAYER_CATEGORY;
+        this.body.collisionFilter.mask = WORLD_CATEGORY;
         
         this.network = network;
 
@@ -33,7 +37,7 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
 
         this.drones = [];
 
-        for (let i = 0; i < 20; i++) this.addDrone();
+        this.addDrone();
     }
     
     setId(id)
@@ -59,7 +63,7 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
             {shape: 
             {
                 type: 'circle',
-                radius: droneRadius + 3
+                radius: droneRadius + droneSeparationDistance
             }}
         );
         drone.body.circleRadius = droneRadius;
@@ -69,7 +73,7 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
         drone.setMass(Phaser.Math.FloatBetween(0.8, 1.2));
 
         drone.body.collisionFilter.category = DRONE_CATEGORY;
-        drone.body.collisionFilter.mask = DRONE_CATEGORY;
+        drone.body.collisionFilter.mask = DRONE_CATEGORY | WORLD_CATEGORY | NODE_CATEGORY;
 
         this.drones.push(drone);
     }

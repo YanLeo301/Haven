@@ -4,7 +4,7 @@ const remotePlayerWidth = 20;
 const remotePlayerHeight = 20;
 const remotePlayerColor = 0xff0000;
 
-//TODO: change analog to LocalPlayer
+//TODO: change analogous to LocalPlayer
 export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Phaser.GameObjects.Sprite
 {
     constructor(scene, x, y, id, messageHandler)
@@ -37,6 +37,7 @@ export default class RemotePlayer extends Phaser.GameObjects.Rectangle // -> Pha
         )
     }
 
+    //TODO: probably unnecessary
     remove()
     {
         this.destroy();

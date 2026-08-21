@@ -1,8 +1,10 @@
 import Phaser from 'phaser'
 import LocalPlayer from '../entities/LocalPlayer'
-import MessageHandler from '../network/MessageHandler';
-import RemotePlayer from '../entities/RemotePlayer';
+import MessageHandler from '../network/MessageHandler'
+import RemotePlayer from '../entities/RemotePlayer'
+import Node from '../entities/Node'
 
+//TODO: on collision of node and player drone, node should be destroyed and player gets new drone
 export default class MainScene extends Phaser.Scene
 {
     constructor(network, messageHandler)
@@ -10,6 +12,7 @@ export default class MainScene extends Phaser.Scene
         super('MainScene');
         this.localPlayer = null; // stores LocalPlayer object
         this.remotePlayers = new Map(); // maps remote players ids to objects
+        this.nodes = new Map();
         this.network = network;
         this.messageHandler = messageHandler;
     }
@@ -17,15 +20,20 @@ export default class MainScene extends Phaser.Scene
     create()
     {
         this.cameras.main.setBackgroundColor('#202020');
-        this.localPlayer = new LocalPlayer(this, 400, 300, this.network);
-
+        
         this.messageHandler.addEventListener(
-            "connection",
+            "nodePos",
             (event) =>
             {
-                this.localPlayer.setId(event.detail.id);
+                const receivedNodeMap = event.detail.nodeMap;
+
+                for (const [id, node] of Object.entries(receivedNodeMap))
+                {
+                    const newNode = new Node(this, node.x, node.y);
+                    this.nodes.set(id, newNode);
+                }
             }
-        );
+        )
         
         this.messageHandler.addEventListener(
             "playerPos",
@@ -56,8 +64,15 @@ export default class MainScene extends Phaser.Scene
                 }
             }
         )
-
-        //TODO: receive nodePosMessage and create nodes
+        
+        this.localPlayer = new LocalPlayer(this, 400, 300, this.network);
+        this.messageHandler.addEventListener(
+            "connection",
+            (event) =>
+            {
+                this.localPlayer.setId(event.detail.id);
+            }
+        );
     }
 
     update()
