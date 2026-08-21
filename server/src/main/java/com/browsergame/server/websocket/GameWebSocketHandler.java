@@ -54,7 +54,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         System.out.println("Connected: " + session.getId());
         sessionStore.add(session.getId(), session);
         gameState.add(session.getId(), new Player(session.getId()));
-
+        
         ConnectionMessage connectionMessage = new ConnectionMessage("connection", session.getId());
         String jsonConnectionMessage = objectMapper.writeValueAsString(connectionMessage);
 
@@ -65,6 +65,19 @@ public class GameWebSocketHandler extends TextWebSocketHandler
         catch (IOException | IllegalStateException e)
         {
             System.out.println("Failed to send id to session: " + session.getId());
+            System.out.println(e.toString());            
+        }
+
+        NodePosMessage nodePosMessage = new NodePosMessage("nodePos", gameState.getNodeMap());
+        String jsonNodePosMessage = objectMapper.writeValueAsString(nodePosMessage);
+
+        try
+        {
+            session.sendMessage(new TextMessage(jsonNodePosMessage));
+        }
+        catch (IOException | IllegalStateException e)
+        {
+            System.out.println("Failed to send node positions to session: " + session.getId());
             System.out.println(e.toString());            
         }
     }
