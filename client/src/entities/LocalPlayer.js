@@ -1,9 +1,10 @@
 import Phaser from 'phaser'
 
 //TODO: find the best feeling values
-const playerRadius = 50;
+const playerRadius = 10;
 const playerColor = 0x8FBC8B;
-const playerSpeed = 5;
+const playerSpeed = 3;
+var swarmRadius = 0; //gets added to playerRadius
 
 const droneRadius = 5;
 const droneSeparationDistance = 3;
@@ -37,7 +38,7 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
 
         this.drones = [];
 
-        this.addDrone();
+        for (let i = 0; i < 100; i++) this.addDrone();
     }
     
     setId(id)
@@ -75,7 +76,14 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
         drone.body.collisionFilter.category = DRONE_CATEGORY;
         drone.body.collisionFilter.mask = DRONE_CATEGORY | WORLD_CATEGORY | NODE_CATEGORY;
 
+        drone.wanderAngle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+        //TODO: find good range for this
+        drone.wanderStrength = Phaser.Math.FloatBetween(0.00005, 0.00010);
+
         this.drones.push(drone);
+
+        //TODO: find best value for this
+        swarmRadius += 0.5;
     }
 
     // TODO: make it feel more dynamic
@@ -88,18 +96,25 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
 
             const distance = Math.sqrt(dx * dx + dy * dy);
 
-            if (distance > playerRadius)
+            if (distance > (playerRadius + swarmRadius)) // distance > playerRadius applies negative force if drone inside swarmRadius but looks cool
             {
                 const dirX = dx / distance;
                 const dirY = dy / distance;
 
-                let forceMagnitude = (distance - playerRadius) * attractionStrength;
+                let forceMagnitude = (distance - (playerRadius + swarmRadius)) * attractionStrength;
 
                 const maxForce = 0.005;
                 forceMagnitude = Math.min(forceMagnitude, maxForce);
 
                 drone.applyForce({x: dirX * forceMagnitude, y: dirY * forceMagnitude});
             }
+
+            drone.wanderAngle += Phaser.Math.FloatBetween(-0.05, 0.05);
+
+            const wanderX = Math.cos(drone.wanderAngle);
+            const wanderY = Math.sin(drone.wanderAngle);
+
+            drone.applyForce({x: wanderX * drone.wanderStrength, y: wanderY * drone.wanderStrength});
         }
     }
 
