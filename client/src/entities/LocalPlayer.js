@@ -47,6 +47,7 @@ export default class LocalPlayer extends Phaser.GameObjects.Arc
         console.log("Local player id set to: ", id);
     }
 
+    //TODO: drone need seperate class with owner attribute for collision handling
     addDrone() 
     {
         const spawnAngle = Phaser.Math.FloatBetween(0, Math.PI * 2);
